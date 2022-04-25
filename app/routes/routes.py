@@ -33,7 +33,10 @@ def index_cats():
 # GET /cats/id
 @bp.route("/<cat_id>", methods=["GET"])
 def get_cat_by_id(cat_id):
-    cat_id = int(cat_id)
+    try:
+        cat_id = int(cat_id)
+    except ValueError:
+        return {"message": f"cat {cat_id} invalid"}, 400
 
     for cat in cats:
         if cat_id == cat.id:
