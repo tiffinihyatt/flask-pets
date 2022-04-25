@@ -26,12 +26,7 @@ bp = Blueprint("cats", __name__, url_prefix="/cats")
 # GET /cats
 @bp.route("", methods=("GET",))
 def index_cats():
-    result_list = [dict(
-            id=cat.id,
-            name=cat.name,
-            color=cat.color,
-            personality=cat.personality,
-        ) for cat in cats]
+    result_list = [cat.to_dict() for cat in cats]
 
     return jsonify(result_list)
 
