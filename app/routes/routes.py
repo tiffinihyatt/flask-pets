@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, abort, make_response
 
 class Cat:
     def __init__(self, id, name, color, personality):
@@ -29,6 +29,18 @@ def index_cats():
     result_list = [cat.to_dict() for cat in cats]
 
     return jsonify(result_list)
+
+def validate_cat(cat_id):
+    try:
+        cat_id = int(cat_id)
+    except ValueError:
+        abort(make_response({"message": f"cat {cat_id} invalid"}, 400))
+
+    for cat in cats:
+        if cat_id == cat.id:
+            return cat.to_dict()
+
+    abort(make_response({"message": f"cat {cat_id} not found"}, 404))
 
 # GET /cats/id
 @bp.route("/<cat_id>", methods=["GET"])
