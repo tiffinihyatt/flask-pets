@@ -6,6 +6,14 @@ class Cat:
         self.name = name
         self.color = color
         self.personality = personality
+    
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            color=self.color,
+            personality=self.personality
+        )
 
 cats = [
     Cat(1, "Muna", "black", "mischevious"),
@@ -34,9 +42,4 @@ def get_cat_by_id(cat_id):
 
     for cat in cats:
         if cat_id == cat.id:
-            return {
-                "id": cat.id,
-                "name": cat.name,
-                "color": cat.color,
-                "personality": cat.personality
-            }
+            return cat.to_dict()
