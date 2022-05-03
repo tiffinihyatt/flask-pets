@@ -1,32 +1,14 @@
 from attr import validate
 from flask import Blueprint, jsonify, abort, make_response
-
-class Cat:
-    def __init__(self, id, name, color, personality):
-        self.id = id
-        self.name = name
-        self.color = color
-        self.personality = personality
-    
-    def to_dict(self):
-        return dict(
-            id=self.id,
-            name=self.name,
-            color=self.color,
-            personality=self.personality
-        )
-
-cats = [
-    Cat(1, "Muna", "black", "mischevious"),
-    Cat(2, "Matthew", "spotted", "cuddly"),
-    Cat(3, "George", "Gray","Sassy")
-]
+from ..models.cat import Cat
 
 bp = Blueprint("cats", __name__, url_prefix="/cats")
 
 # GET /cats
 @bp.route("", methods=("GET",))
 def index_cats():
+    cats = Cat.query.all()
+    
     result_list = [cat.to_dict() for cat in cats]
 
     return jsonify(result_list)
