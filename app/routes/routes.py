@@ -13,6 +13,10 @@ def index_cats():
 
     return jsonify(result_list)
 
+@bp.route("/<cat_id>", methods=["GET"])
+def get_cat_by_id(cat_id):
+    pass
+
 # helper function to check for valid cat id or return cat dict if id is valid
 def validate_cat(cat_id):
     try:
@@ -20,11 +24,12 @@ def validate_cat(cat_id):
     except ValueError:
         abort(make_response({"message": f"cat {cat_id} invalid"}, 400))
 
-    for cat in cats:
-        if cat_id == cat.id:
-            return cat.to_dict()
+    cat = Cat.query.get(cat_id)
 
-    abort(make_response({"message": f"cat {cat_id} not found"}, 404))
+    if not cat:
+        abort(make_response({"message": f"cat {cat_id} not found"}, 404))
+    
+    return cat
 
 # GET /cats/id
 @bp.route("/<cat_id>", methods=["GET"])
