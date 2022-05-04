@@ -20,7 +20,12 @@ def create_new_cat():
 # get all cats
 @bp.route("", methods=("GET",))
 def get_all_cats():
-    cats = Cat.query.all()
+    color_param = request.args.get("color")
+
+    if color_param:
+        cats = Cat.query.filter_by(color=color_param)
+    else:
+        cats = Cat.query.all()
     
     result_list = [cat.to_dict() for cat in cats]
 
