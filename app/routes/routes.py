@@ -4,18 +4,24 @@ from ..models.cat import Cat
 
 bp = Blueprint("cats", __name__, url_prefix="/cats")
 
+# error message helper function
+def error_message(message, status_code):
+    abort(make_response(jsonify(dict(details=message)), status_code))
+
 # post a new cat
 @bp.route("", methods=["POST"])
 def create_new_cat():
     request_body = request.get_json()
 
-    new_cat = Cat(name=request_body["name"], color=request_body["color"], 
-    personality=request_body["personality"])
+    try:
+        cat = Cat.from_dict(request_body)
+    except KeyError as err:
+        error_message(f"Missing key: {err}", 400)
 
-    db.session.add(new_cat)
+    db.session.add(cat)
     db.session.commit()
 
-    return make_response(f"Cat {new_cat.name} successfully created")
+    return make_response(f"Cat {cat.name} successfully created")
 
 # get all cats
 @bp.route("", methods=("GET",))
